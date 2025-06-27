@@ -1,4 +1,4 @@
-using CLASSWrapper, Test
+using CLASS, Test
 
 in = Dict(
     "h" => 0.70,
@@ -7,18 +7,18 @@ in = Dict(
 )
 
 @testset "Standard usage" begin
-    out = CLASSWrapper.run(in)
+    out = CLASS.run(in)
     @test haskey(out, "pk")
     @test haskey(out, "cl")
     @test haskey(out, "background")
 end
 
 @testset "Error when executable is not found" begin
-    @test_throws Base.IOError CLASSWrapper.run(in; exec = "fuck")
+    @test_throws Base.IOError CLASS.run(in; exec = "fuck")
 end
 
 @testset "Forbid repeated usage in the same directory" begin
     dir = mktempdir()
-    @test CLASSWrapper.run(in; dir) isa Any # success
-    @test_throws "is not empty" CLASSWrapper.run(in; dir) isa Any # failure
+    @test CLASS.run(in; dir) isa Any # success
+    @test_throws "is not empty" CLASS.run(in; dir) isa Any # failure
 end
