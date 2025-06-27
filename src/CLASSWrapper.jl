@@ -1,4 +1,4 @@
-module CLASS
+module CLASSWrapper
 
 using Base: run
 using DelimitedFiles
@@ -21,7 +21,7 @@ A dictionary is returned with all data tables stored in the output directory.
 # Example
 
 ```julia-repl
-julia> using CLASS
+julia> using CLASSWrapper
 
 julia> in = Dict(
            "h" => 0.70,
@@ -29,7 +29,7 @@ julia> in = Dict(
            "write_background" => true,
        );
 
-julia> out = CLASS.run(in)
+julia> out = CLASSWrapper.run(in)
 Dict{Any, Any} with 3 entries:
   "pk"         => 528×2 DataFrame…
   "cl"         => 2499×5 DataFrame…

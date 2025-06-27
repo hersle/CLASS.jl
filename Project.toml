@@ -1,4 +1,4 @@
-name = "CLASS"
+name = "CLASSWrapper"
 uuid = "a61081fd-7c4d-44c2-8709-3eabc28bd84c"
 authors = ["Herman Sletmoen"]
 version = "0.1.0"
