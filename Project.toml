@@ -1,16 +1,18 @@
 name = "CLASS"
 uuid = "a61081fd-7c4d-44c2-8709-3eabc28bd84c"
 authors = ["Herman Sletmoen"]
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
+CommonSolve = "38540f10-b2f7-11e9-35d8-d573e4eb0ff2"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 DelimitedFiles = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 
 [compat]
-julia = "1.8"
+CommonSolve = "0.2.4"
 DataFrames = "1.7"
 DelimitedFiles = "1.6"
+julia = "1.8"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

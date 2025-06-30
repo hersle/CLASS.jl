@@ -1,24 +1,24 @@
 using CLASS, Test
 
-in = Dict(
+prob = CLASSProblem(
     "h" => 0.70,
     "output" => [:mPk, "tCl", "pCl"],
     "write_background" => true,
 )
 
-@testset "Standard usage" begin
-    out = CLASS.run(in)
-    @test haskey(out, "pk")
-    @test haskey(out, "cl")
-    @test haskey(out, "background")
+@testset "Error when executable is not found" begin
+    @test_throws Base.IOError solve(prob; exec = "fuck")
 end
 
-@testset "Error when executable is not found" begin
-    @test_throws Base.IOError CLASS.run(in; exec = "fuck")
+@testset "Standard usage" begin
+    sol = solve(prob)
+    @test Set(keys(sol.tables)) == Set(["pk", "cl", "background"])
 end
 
 @testset "Forbid repeated usage in the same directory" begin
-    dir = mktempdir()
-    @test CLASS.run(in; dir) isa Any # success
-    @test_throws "is not empty" CLASS.run(in; dir) isa Any # failure
+    try
+        solve(prob) isa Any # fill directory if not already filled (ignoring error)
+    catch
+    end
+    @test_throws "is not empty" solve(prob) isa Any # failure
 end
