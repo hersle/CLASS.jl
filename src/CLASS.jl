@@ -33,6 +33,13 @@ struct CLASSProblem
     end
 end
 
+function Base.copy(prob::CLASSProblem)
+    in = deepcopy(prob.in)
+    delete!(in, "root")
+    delete!(in, "overwrite_root")
+    return CLASSProblem(in...)
+end
+
 struct CLASSSolution
     prob::CLASSProblem
     tables::Dict{String, Union{Nothing, DataFrame}}
@@ -50,10 +57,13 @@ input(prob::CLASSProblem) = prod(["$key = $(format_CLASS(val))\n" for (key, val)
 Base.show(io::IO, prob::CLASSProblem) = print(io, "CLASS problem with input file $(prob.inpath):\n", input(prob)[begin:end-1]) # exclude final newline
 
 """
-    solve(prob::CLASSProblem; exec = "class")
+    solve(prob::CLASSProblem; exec = "class", threads = 0)
 
 Solve the CLASS problem `prob` with the CLASS executable `exec` (default: search `\$PATH`).
 A CLASS solution object is returned that lazily loads all output tables produced by CLASS.
+
+CLASS is requested to parallelize over the given number of `threads`.
+If it is 0, the number of threads is determined automatically.
 
 # Example
 
@@ -92,7 +102,7 @@ julia> sol["background"]
                                       15 columns and 39989 rows omitted
 ```
 """
-function CommonSolve.solve(prob::CLASSProblem; exec = "class")
+function CommonSolve.solve(prob::CLASSProblem; exec = "class", threads = 0)
     # Output path should not exist from before
     isdir(prob.outpath) && !isempty(readdir(prob.outpath)) && error("Output directory $(prob.outpath) is not empty")
 
@@ -102,7 +112,11 @@ function CommonSolve.solve(prob::CLASSProblem; exec = "class")
 
     # Create output directory and run
     mkpath(dirname(prob.outpath))
-    runtime = @elapsed run(`$exec $(prob.inpath)`)
+    cmd = `$exec $(prob.inpath)`
+    if threads > 0
+        cmd = addenv(cmd, "OMP_NUM_THREADS" => threads) # read by CLASS' include/parallel.h
+    end
+    runtime = @elapsed r = run(cmd)
 
     # Return dictionary of output data tables
     tables = Dict()

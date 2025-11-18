@@ -27,3 +27,11 @@ end
     @test_throws "Do not set root or overwrite_root" CLASSProblem("root" => "./")
     @test_throws "Do not set root or overwrite_root" CLASSProblem("overwrite_root" => true)
 end
+
+@testset "Customize number of threads for parallelization" begin
+    prob1, prob2, prob3 = copy(prob), copy(prob), copy(prob)
+    sol1 = solve(prob1; threads = 1) # warmup
+    sol2 = solve(prob2; threads = 1)
+    sol3 = solve(prob3; threads = 4)
+    @test sol3.runtime / sol2.runtime < 1/2 # should be at least 2x faster
+end
