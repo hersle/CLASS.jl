@@ -22,3 +22,8 @@ end
     end
     @test_throws "is not empty" solve(prob) isa Any # failure
 end
+
+@testset "Forbid setting root and overwrite_root" begin
+    @test_throws "Do not set root or overwrite_root" CLASSProblem("root" => "./")
+    @test_throws "Do not set root or overwrite_root" CLASSProblem("overwrite_root" => true)
+end

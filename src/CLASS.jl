@@ -23,6 +23,9 @@ struct CLASSProblem
         outpath = joinpath(dir, "output/")
 
         in = Dict(args...)
+        if haskey(in, "root") || haskey(in, "overwrite_root")
+            error("Do not set root or overwrite_root; they are set internally by the wrapper.")
+        end
         in = merge(Dict("root" => outpath, "overwrite_root" => "yes"), in)
         in = Dict(sort(collect(in), by = first)) # sort by key
 
